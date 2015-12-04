@@ -5,7 +5,7 @@
 
 INSTALL_DIR="/var/www/html"
 #don't quote, as shell expansion will not occur then.
-WP_CLI=~/bin/wp-cli.phar
+WP_CLI=/home/ec2-user/bin/wp-cli.phar
 CURL=/usr/bin/curl
 
 function usage() {
