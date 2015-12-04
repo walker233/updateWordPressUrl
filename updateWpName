@@ -7,6 +7,16 @@ INSTALL_DIR="/var/www/html"
 #don't quote, as shell expansion will not occur then.
 WP_CLI=/home/ec2-user/bin/wp-cli.phar
 
+#When we do not have wp-cli installed, get it.
+if [ ! -e "$WP_CLI" ] 
+ then
+  WP_CLI="wp-cli.phar" 
+  if [ ! -e "wp-cli.phar" ] 
+   then
+    curl -O -s https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+  fi
+fi
+
 function usage() {
  echo "$0 <new_site_name>"
  echo
