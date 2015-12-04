@@ -1,0 +1,35 @@
+#!/bin/bash
+
+#Original command
+#php wp-cli.phar search-replace 'http://ec2-52-26-132-226.us-west-2.compute.amazonaws.com' 'http://ec2-52-25-180-240.us-west-2.compute.amazonaws.com' --path=/var/www/html --skip-columns=guid
+
+INSTALL_DIR="/var/www/html"
+#don't quote, as shell expansion will not occur then.
+WP_CLI=~/bin/wp-cli.phar
+CURL=/usr/bin/curl
+
+function usage() {
+ echo "$0"
+ echo
+ echo "  Updates wordpress url in all places it exists. Used from user data script"
+ echo "  when amazon instance startsup. Good for development environments. Auto"
+ echo "  determines the correct URL at startup."
+ echo
+ exit
+}
+
+if [ $# -ne 0 ]
+ then
+ usage
+fi
+
+PUBLICNAME=`$CURL -s http://169.254.169.254/latest/meta-data/public-hostname`
+
+NEW_SITE="http://$PUBLICNAME"
+
+#get old site name by using mysql and grepping through file for information
+OLD_SITE=`php $WP_CLI option get siteurl --path=$INSTALL_DIR`
+
+#echo "php $WP_CLI search-replace "$OLD_SITE" "$NEW_SITE" --path=$INSTALL_DIR --skip-columns=guid"
+php $WP_CLI search-replace "$OLD_SITE" "$NEW_SITE" --path=$INSTALL_DIR --skip-columns=guid >/dev/null
+
