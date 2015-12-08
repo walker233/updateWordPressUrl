@@ -1,12 +1,18 @@
 #!/bin/bash
+#Name: autoUpdateWpName
+#Desc: This script is intended to be run from root at startup.
 
 #Original command
 #php wp-cli.phar search-replace 'http://ec2-52-26-132-226.us-west-2.compute.amazonaws.com' 'http://ec2-52-25-180-240.us-west-2.compute.amazonaws.com' --path=/var/www/html --skip-columns=guid
 
-INSTALL_DIR="/var/www/html"
+USER="ec2-user"
+UPDATE_WP_DIR="/usr/local/updateWordPressUrl"
+WP_INSTALL_DIR="/var/www/html"
 #don't quote, as shell expansion will not occur then.
 WP_CLI=/home/ec2-user/updateWordPressUrl/wp-cli.phar
 CURL=/usr/bin/curl
+
+cd $UPDATE_WP_DIR
 
 #When we do not have wp-cli installed, get it.
 if [ ! -e "$WP_CLI" ] 
@@ -38,8 +44,8 @@ PUBLICNAME=`$CURL -s http://169.254.169.254/latest/meta-data/public-hostname`
 NEW_SITE="http://$PUBLICNAME"
 
 #get old site name by using mysql and grepping through file for information
-OLD_SITE=`php $WP_CLI option get siteurl --path=$INSTALL_DIR`
+OLD_SITE=`sudo -u $USER -- php $WP_CLI option get siteurl --path=$WP_INSTALL_DIR`
 
-#echo "php $WP_CLI search-replace "$OLD_SITE" "$NEW_SITE" --path=$INSTALL_DIR --skip-columns=guid"
-php $WP_CLI search-replace "$OLD_SITE" "$NEW_SITE" --path=$INSTALL_DIR --skip-columns=guid >/dev/null
+#echo "php $WP_CLI search-replace "$OLD_SITE" "$NEW_SITE" --path=$WP_INSTALL_DIR --skip-columns=guid"
+sudo -u $USER -- php $WP_CLI search-replace "$OLD_SITE" "$NEW_SITE" --path=$WP_INSTALL_DIR --skip-columns=guid 
 

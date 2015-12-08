@@ -1,4 +1,6 @@
 #!/bin/bash
+#Name: updateWpName
+#Desc: This script is intended to be run from user ec2-user, interactively.
 
 #Original command
 #php wp-cli.phar search-replace 'http://ec2-52-26-132-226.us-west-2.compute.amazonaws.com' 'http://ec2-52-25-180-240.us-west-2.compute.amazonaws.com' --path=/var/www/html --skip-columns=guid
